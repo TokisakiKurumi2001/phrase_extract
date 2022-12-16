@@ -1,4 +1,4 @@
-from transformers import PreTrainedModel, RobertaModel
+from transformers import PreTrainedModel, RobertaModel, BertModel
 import torch
 from torch import Tensor
 import torch.nn as nn
@@ -57,8 +57,11 @@ class PhrExtModel(PhrExtPreTrainedModel):
         classifier_dropout = (
             config.classifier_dropout if config.classifier_dropout is not None else config.hidden_dropout_prob
         )
-        self.dropout = nn.Dropout(classifier_dropout)
-        self.classifier = nn.Linear(config.hidden_size, config.num_labels)
+        self.dropout1 = nn.Dropout(classifier_dropout)
+        self.normalize = nn.Linear(config.hidden_size, config.hidden_size//2)
+        self.act = nn.GELU()
+        self.dropout2 = nn.Dropout(classifier_dropout)
+        self.classifier = nn.Linear(config.hidden_size//2, config.num_labels)
 
         self.post_init()
 
@@ -94,5 +97,7 @@ class PhrExtModel(PhrExtPreTrainedModel):
             sequence_output = torch.stack(list_sequence_output).sum(0)
         else:
             sequence_output = torch.stack(list_sequence_output).mean(0)
-        logits = self.classifier(sequence_output)
+
+        intermidiate = self.act(self.normalize(self.dropout1(sequence_output)))
+        logits = self.classifier(self.dropout1(intermidiate))
         return logits

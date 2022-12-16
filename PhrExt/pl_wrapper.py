@@ -7,7 +7,7 @@ import evaluate
 import numpy as np
 
 class LitPhrExt(pl.LightningModule):
-    def __init__(self, pretrained_ck: str, layers_use_from_last: int, method_for_layers: str):
+    def __init__(self, pretrained_ck: str, layers_use_from_last: int, method_for_layers: str, lr: float):
         super(LitPhrExt, self).__init__()
         label_converter = LabelConverter()
         self.id2label = label_converter.id2label
@@ -21,9 +21,9 @@ class LitPhrExt(pl.LightningModule):
         self.model = PhrExtModel(config)
         self.num_labels = config.num_labels
         self.loss = nn.CrossEntropyLoss()
+        self.lr = lr
         self.valid_metric = evaluate.load('seqeval')
-        self.test_metric = evaluate.load('seqeval')
-        
+        self.test_metric = evaluate.load('seqeval')    
         self.save_hyperparameters()
 
     def export_model(self, path):
@@ -79,5 +79,5 @@ class LitPhrExt(pl.LightningModule):
         self.log('test/accuracy', results['overall_accuracy'], on_epoch=True, on_step=False, sync_dist=True)
         
     def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(self.parameters(), lr=2e-5)
+        optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
         return optimizer
