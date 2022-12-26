@@ -6,3 +6,16 @@ class LabelConverter:
             'I-SBAR': 18, 'B-UCP': 19, 'I-UCP': 20, 'B-VP': 21, 'I-VP': 22
         }
         self.id2label = [k for k in self.label2id.keys()]
+        self.abbr2full = {
+            "ADJP": "Adjective Phrase",
+            "ADVP": "Adverbial Phrase",
+            "CONJP": "Conjunction Phrase",
+            "INTJ": "Interjection",
+            "LST": "List marker",
+            "NP": "Noun Phrase",
+            "PP": "Preposition",
+            "PRT": "Particle",
+            "SBAR": "Clause introduce by subordinating conjunction",
+            "UCP": "Unlike Coordinated Phrase",
+            "VP": "Verb Phrase"
+        }

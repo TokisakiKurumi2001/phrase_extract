@@ -49,10 +49,11 @@ class PhrExtModel(PhrExtPreTrainedModel):
         self.layers_use_from_last = config.layers_use_from_last
         self.method_for_layers = config.method_for_layers
 
-        if config.pretrained_ck is None:
-            self.roberta = RobertaModel(config, add_pooling_layer=False, output_hidden_states=True)
+        if config.pretrained_ck == "":
+            self.roberta = RobertaModel(config, add_pooling_layer=False)
         else:
             self.roberta = RobertaModel.from_pretrained(config.pretrained_ck, add_pooling_layer=False, output_hidden_states=True)
+            config.pretrained_ck = ""
 
         classifier_dropout = (
             config.classifier_dropout if config.classifier_dropout is not None else config.hidden_dropout_prob

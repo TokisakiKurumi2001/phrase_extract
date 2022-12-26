@@ -9,7 +9,7 @@ if __name__ == "__main__":
         'pretrained_ck': 'roberta-base',
         'method_for_layers': 'mean',
         'layers_use_from_last': 2,
-        'lr': 5e-5
+        'lr': 3e-5
     }
     lit_phrext = LitPhrExt(**hyperparameter)
 
@@ -18,9 +18,9 @@ if __name__ == "__main__":
     [train_dataloader, test_dataloader, valid_dataloader] = phrext_dataloader.get_dataloader(batch_size=128, types=["train", "test", "validation"])
 
     # train model
-    trainer = pl.Trainer(max_epochs=20, devices=[0], accelerator="gpu", logger=wandb_logger)#, strategy="ddp")
+    trainer = pl.Trainer(max_epochs=20, devices=[1], accelerator="gpu", logger=wandb_logger)#, strategy="ddp")
     trainer.fit(model=lit_phrext, train_dataloaders=train_dataloader, val_dataloaders=valid_dataloader)
     trainer.test(dataloaders=test_dataloader)
 
     # save model & tokenizer
-    # lit_phrext.export_model('phrext/v1')
+    lit_phrext.export_model('phrext_model/v1')

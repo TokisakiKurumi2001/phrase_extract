@@ -24,9 +24,10 @@ class PhrExtConfig(PretrainedConfig):
         use_cache=True,
         classifier_dropout=None,
         num_labels=23,
-        pretrained_ck=None,
+        pretrained_ck="",
         layers_use_from_last=4,
         method_for_layers='sum',
+        output_hidden_states=True,
         **kwargs
     ):
         super().__init__(pad_token_id=pad_token_id, bos_token_id=bos_token_id, eos_token_id=eos_token_id, **kwargs)
@@ -50,3 +51,4 @@ class PhrExtConfig(PretrainedConfig):
         self.pretrained_ck = pretrained_ck
         self.layers_use_from_last = layers_use_from_last
         self.method_for_layers = method_for_layers
+        self.output_hidden_states = output_hidden_states
